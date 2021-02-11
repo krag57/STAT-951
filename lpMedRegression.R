@@ -5,7 +5,7 @@ library(tidyverse)
 
 
 norm <- function(x) (x - min(x))/(max(x) - min(x))
-
+tau=.5
 p=1
 n=10
 set.seed(1)
@@ -32,7 +32,7 @@ xData<-Pima.tr %>%
   add_column(y = y) 
 
 a=c(rep(0,p+1),rep(1,n))
-A=cbind(xMat%x%c(1,-1),diag(1,n,n)%x%rep(-1,2))
+A=cbind(xMat%x%c(1,-1),diag(1,n,n)%x%c(-tau,-tau))
 b=y%x%c(1,-1)
 
 simplex(a,A1=A,b1=b)
@@ -49,7 +49,7 @@ linprog$solution[1:(p+1)]
 ##Quantile Regression
 base=read.table("http://freakonometrics.free.fr/rent98_00.txt",header=TRUE)
 attach(base)
-tau <- 0.5
+tau <- 0.3
 base<-base[1:30,]
 # Problem (1) only one covariate
 X <- cbind(1,base$area)
