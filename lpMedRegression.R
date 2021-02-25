@@ -1,7 +1,9 @@
 library(MASS)
+library(boot)
 library(quantreg)
 library(lpSolve)
 library(tidyverse)
+library(mvtnorm)
 
 
 norm <- function(x) (x - min(x))/(max(x) - min(x))
@@ -11,7 +13,7 @@ n=10
 set.seed(1)
 beta<-c(sample(1:6,p+1,replace = T))
 
-data("Pima.tr")
+#data("Pima.tr")
 
 xMat<-Pima.tr %>% 
   mutate(cons=1,.before = everything())%>%
@@ -21,7 +23,7 @@ xMat<-Pima.tr %>%
   matrix(ncol = p+1, byrow = F)
 
 set.seed(2)
-error<-rt(n = n,df = 1)
+error<-rcauchy(n = n,location = 0,scale = 3)
 y<-xMat%*%beta+error
 
 xData<-Pima.tr %>% 
@@ -51,7 +53,7 @@ base=read.table("http://freakonometrics.free.fr/rent98_00.txt",header=TRUE)
 attach(base)
 tau <- 0.3
 base<-base[1:30,]
-# Problem (1) only one covariate
+# Problem (1) only one covariate 
 X <- cbind(1,base$area)
 K <- ncol(X)
 N <- nrow(X)
